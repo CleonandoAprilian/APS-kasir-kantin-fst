@@ -14,13 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      menus: {
+        Row: {
+          created_at: string
+          gambar: string | null
+          harga: number
+          id: string
+          kategori: string
+          nama_menu: string
+          owner_id: string
+          stok: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          gambar?: string | null
+          harga?: number
+          id?: string
+          kategori?: string
+          nama_menu: string
+          owner_id?: string
+          stok?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          gambar?: string | null
+          harga?: number
+          id?: string
+          kategori?: string
+          nama_menu?: string
+          owner_id?: string
+          stok?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transaction_details: {
+        Row: {
+          harga: number
+          id: string
+          menu_id: string | null
+          nama_menu: string
+          qty: number
+          subtotal: number
+          transaction_id: string
+        }
+        Insert: {
+          harga?: number
+          id?: string
+          menu_id?: string | null
+          nama_menu: string
+          qty?: number
+          subtotal?: number
+          transaction_id: string
+        }
+        Update: {
+          harga?: number
+          id?: string
+          menu_id?: string | null
+          nama_menu?: string
+          qty?: number
+          subtotal?: number
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_details_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "menus"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_details_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          bayar: number
+          created_at: string
+          id: string
+          kembalian: number
+          kode_transaksi: string
+          owner_id: string
+          total: number
+        }
+        Insert: {
+          bayar?: number
+          created_at?: string
+          id?: string
+          kembalian?: number
+          kode_transaksi: string
+          owner_id?: string
+          total?: number
+        }
+        Update: {
+          bayar?: number
+          created_at?: string
+          id?: string
+          kembalian?: number
+          kode_transaksi?: string
+          owner_id?: string
+          total?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_pos_transaction: {
+        Args: {
+          p_bayar: number
+          p_items: Json
+          p_kembalian: number
+          p_kode: string
+          p_total: number
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
