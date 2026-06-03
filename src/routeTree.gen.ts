@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTransaksiRouteImport } from './routes/_authenticated/transaksi'
+import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
@@ -35,6 +36,11 @@ const AuthenticatedTransaksiRoute = AuthenticatedTransaksiRouteImport.update({
   path: '/transaksi',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRiwayatRoute = AuthenticatedRiwayatRouteImport.update({
+  id: '/riwayat',
+  path: '/riwayat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMenuRoute = AuthenticatedMenuRouteImport.update({
   id: '/menu',
   path: '/menu',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/riwayat': typeof AuthenticatedRiwayatRoute
   '/transaksi': typeof AuthenticatedTransaksiRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/riwayat': typeof AuthenticatedRiwayatRoute
   '/transaksi': typeof AuthenticatedTransaksiRoute
 }
 export interface FileRoutesById {
@@ -67,13 +75,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
+  '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
   '/_authenticated/transaksi': typeof AuthenticatedTransaksiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/menu' | '/transaksi'
+  fullPaths: '/' | '/auth' | '/dashboard' | '/menu' | '/riwayat' | '/transaksi'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/menu' | '/transaksi'
+  to: '/' | '/auth' | '/dashboard' | '/menu' | '/riwayat' | '/transaksi'
   id:
     | '__root__'
     | '/'
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/_authenticated/menu'
+    | '/_authenticated/riwayat'
     | '/_authenticated/transaksi'
   fileRoutesById: FileRoutesById
 }
@@ -120,6 +130,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransaksiRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/riwayat': {
+      id: '/_authenticated/riwayat'
+      path: '/riwayat'
+      fullPath: '/riwayat'
+      preLoaderRoute: typeof AuthenticatedRiwayatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/menu': {
       id: '/_authenticated/menu'
       path: '/menu'
@@ -140,12 +157,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
+  AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
   AuthenticatedTransaksiRoute: typeof AuthenticatedTransaksiRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
+  AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
   AuthenticatedTransaksiRoute: AuthenticatedTransaksiRoute,
 }
 
