@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /menu
+Disallow: /transaksi
+Disallow: /riwayat
+Disallow: /laporan
