@@ -80,11 +80,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "KantinPOS — Kasir Kantin Modern" },
+      {
+        name: "description",
+        content:
+          "Aplikasi kasir kantin modern: kelola menu & stok, transaksi penjualan, dan laporan dalam satu tempat.",
+      },
+      { name: "author", content: "KantinPOS" },
+      { property: "og:title", content: "KantinPOS — Kasir Kantin Modern" },
+      {
+        property: "og:description",
+        content: "Kelola menu, stok, transaksi, dan laporan kantin Anda.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
