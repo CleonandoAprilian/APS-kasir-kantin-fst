@@ -46,7 +46,10 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "login") {
-        const { error } = await supabase.auth.signInWithPassword(values);
+        const { error } = await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
         if (error) throw error;
         toast.success("Selamat datang kembali!");
       } else {
@@ -90,13 +93,11 @@ function AuthPage() {
             lebih cepat & rapi.
           </h1>
           <p className="max-w-md text-primary-foreground/85">
-            Menu dan stok terintegrasi, transaksi kilat, struk siap cetak, dan
-            laporan penjualan harian maupun bulanan dalam satu aplikasi.
+            Menu dan stok terintegrasi, transaksi kilat, struk siap cetak, dan laporan penjualan
+            harian maupun bulanan dalam satu aplikasi.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/70">
-          © {new Date().getFullYear()} KantinPOS
-        </p>
+        <p className="text-sm text-primary-foreground/70">© {new Date().getFullYear()} KantinPOS</p>
         <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-24 -left-10 h-80 w-80 rounded-full bg-white/10" />
       </div>
@@ -149,9 +150,7 @@ function AuthPage() {
                   {...register("email")}
                 />
               </div>
-              {errors.email && (
-                <p className="text-xs text-destructive">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
 
             <div className="space-y-1.5">
@@ -167,9 +166,7 @@ function AuthPage() {
                 />
               </div>
               {errors.password && (
-                <p className="text-xs text-destructive">
-                  {errors.password.message}
-                </p>
+                <p className="text-xs text-destructive">{errors.password.message}</p>
               )}
             </div>
 

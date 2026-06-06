@@ -1,15 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
@@ -74,10 +66,7 @@ function LaporanPage() {
   const summary = useMemo(() => {
     const rows = txs ?? [];
     const pendapatan = rows.reduce((s, t) => s + t.total, 0);
-    const item = rows.reduce(
-      (s, t) => s + t.transaction_details.reduce((q, d) => q + d.qty, 0),
-      0,
-    );
+    const item = rows.reduce((s, t) => s + t.transaction_details.reduce((q, d) => q + d.qty, 0), 0);
     return { pendapatan, transaksi: rows.length, item };
   }, [txs]);
 
@@ -118,16 +107,46 @@ function LaporanPage() {
       t.total,
     ]);
     lines.push(["", "", "TOTAL", summary.pendapatan]);
-    const csv = [header, ...lines]
-      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
-      .join("\n");
-    const blob = new Blob(["\uFEFF" + csv], {
-      type: "text/csv;charset=utf-8;",
+
+    const html = [
+      `<!DOCTYPE html>`,
+      `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`,
+      `<head>`,
+      `<meta charset="utf-8"/>`,
+      `<!--[if gte mso 9]><xml>`,
+      `<x:ExcelWorkbook>`,
+      `<x:ExcelWorksheets>`,
+      `<x:ExcelWorksheet>`,
+      `<x:Name>Laporan</x:Name>`,
+      `<x:WorksheetOptions><x:Print><x:ValidPrinterInfo/></x:Print></x:WorksheetOptions>`,
+      `</x:ExcelWorksheet>`,
+      `</x:ExcelWorksheets>`,
+      `</x:ExcelWorkbook>`,
+      `</xml><![endif]-->`,
+      `</head>`,
+      `<body>`,
+      `<table border="1">`,
+      `<thead>`,
+      `<tr>${header.map((cell) => `<th>${cell}</th>`).join("")}</tr>`,
+      `</thead>`,
+      `<tbody>`,
+      ...lines.map(
+        (line) =>
+          `<tr><td>${line[0]}</td><td>${line[1]}</td><td>${line[2]}</td><td>${line[3]}</td></tr>`,
+      ),
+      `</tbody>`,
+      `</table>`,
+      `</body>`,
+      `</html>`,
+    ].join("\n");
+
+    const blob = new Blob(["\uFEFF" + html], {
+      type: "application/vnd.ms-excel;charset=utf-8",
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `laporan-${value}.csv`;
+    a.download = `laporan-${value}.xls`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Laporan Excel diunduh");
@@ -140,11 +159,7 @@ function LaporanPage() {
     doc.setFontSize(16);
     doc.text("Laporan Penjualan — KantinPOS", 14, 18);
     doc.setFontSize(10);
-    doc.text(
-      `Periode: ${mode === "harian" ? day : month}`,
-      14,
-      25,
-    );
+    doc.text(`Periode: ${mode === "harian" ? day : month}`, 14, 25);
     doc.text(
       `Total Pendapatan: ${formatRupiah(summary.pendapatan)}  |  Transaksi: ${summary.transaksi}  |  Item: ${summary.item}`,
       14,
@@ -170,12 +185,8 @@ function LaporanPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-bold text-foreground lg:text-3xl">
-            Laporan
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Rekap penjualan harian dan bulanan.
-          </p>
+          <h1 className="font-display text-2xl font-bold text-foreground lg:text-3xl">Laporan</h1>
+          <p className="text-sm text-muted-foreground">Rekap penjualan harian dan bulanan.</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={exportExcel}>
@@ -244,10 +255,7 @@ function LaporanPage() {
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chart}>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="var(--color-border)"
-                />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis
                   dataKey="label"
                   stroke="var(--color-muted-foreground)"

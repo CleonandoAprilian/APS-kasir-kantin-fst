@@ -63,12 +63,8 @@ function Brand() {
         <Store className="h-5 w-5" />
       </div>
       <div className="leading-tight">
-        <p className="font-display text-base font-bold text-sidebar-foreground">
-          KantinPOS
-        </p>
-        <p className="text-[0.65rem] text-sidebar-foreground/60">
-          Kasir Kantin Modern
-        </p>
+        <p className="font-display text-base font-bold text-sidebar-foreground">KantinPOS</p>
+        <p className="text-[0.65rem] text-sidebar-foreground/60">Kasir Kantin Modern</p>
       </div>
     </div>
   );
@@ -92,17 +88,21 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 flex-col bg-sidebar lg:flex">
-        <Brand />
-        <NavLinks />
-        <div className="px-3 pb-4">
-          <button
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-destructive hover:text-destructive-foreground"
-          >
-            <LogOut className="h-[1.15rem] w-[1.15rem]" />
-            Logout
-          </button>
+      <aside className="hidden w-64 shrink-0 flex-col bg-sidebar lg:flex lg:sticky lg:top-0 lg:h-screen lg:self-start lg:overflow-y-auto">
+        <div className="flex min-h-screen flex-col">
+          <div>
+            <Brand />
+            <NavLinks />
+          </div>
+          <div className="mt-auto px-3 pb-4">
+            <button
+              onClick={handleLogout}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <LogOut className="h-[1.15rem] w-[1.15rem]" />
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -117,42 +117,36 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-64 bg-sidebar p-0">
-                <Brand />
-                <NavLinks onNavigate={() => setOpen(false)} />
-                <div className="px-3 pb-4">
-                  <button
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-destructive hover:text-destructive-foreground"
-                  >
-                    <LogOut className="h-[1.15rem] w-[1.15rem]" />
-                    Logout
-                  </button>
+                <div className="flex h-full flex-col">
+                  <div>
+                    <Brand />
+                    <NavLinks onNavigate={() => setOpen(false)} />
+                  </div>
+                  <div className="mt-auto px-3 pb-4">
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                    >
+                      <LogOut className="h-[1.15rem] w-[1.15rem]" />
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
             <Link to="/dashboard" className="flex items-center gap-2 lg:hidden">
-              <span className="font-display text-lg font-bold text-gradient">
-                KantinPOS
-              </span>
+              <span className="font-display text-lg font-bold text-gradient">KantinPOS</span>
             </Link>
           </div>
 
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={toggleTheme}>
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
             <div className="flex items-center gap-2.5">
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold leading-none text-foreground">
-                  Pemilik
-                </p>
-                <p className="max-w-[12rem] truncate text-xs text-muted-foreground">
-                  {email}
-                </p>
+                <p className="text-sm font-semibold leading-none text-foreground">Pemilik</p>
+                <p className="max-w-[12rem] truncate text-xs text-muted-foreground">{email}</p>
               </div>
               <Avatar className="h-9 w-9 border-2 border-primary/30">
                 <AvatarFallback className="bg-gradient-primary text-xs font-bold text-primary-foreground">
