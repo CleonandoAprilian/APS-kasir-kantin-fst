@@ -76,8 +76,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const email = user?.email ?? "Pemilik";
-  const initials = email.slice(0, 2).toUpperCase();
+  const displayName =
+    // Supabase stores custom metadata under `user_metadata` or `user_metadata`
+    // check both to be safe, fall back to email
+    (user as any)?.user_metadata?.name ||
+    (user as any)?.user_metadata?.username ||
+    user?.email ||
+    "Pemilik";
+  const initials = displayName.slice(0, 2).toUpperCase();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -145,8 +151,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </Button>
             <div className="flex items-center gap-2.5">
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold leading-none text-foreground">Pemilik</p>
-                <p className="max-w-[12rem] truncate text-xs text-muted-foreground">{email}</p>
+                <p className="text-sm font-semibold leading-none text-foreground">{displayName}</p>
+                <p className="max-w-[12rem] truncate text-xs text-muted-foreground">
+                  {user?.email}
+                </p>
               </div>
               <Avatar className="h-9 w-9 border-2 border-primary/30">
                 <AvatarFallback className="bg-gradient-primary text-xs font-bold text-primary-foreground">

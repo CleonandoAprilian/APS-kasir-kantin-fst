@@ -19,6 +19,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 const schema = z.object({
+  name: z.string().trim().min(1, "Masukkan nama").max(50).optional(),
   email: z.string().trim().email("Email tidak valid").max(255),
   password: z.string().min(6, "Password minimal 6 karakter").max(72),
 });
@@ -54,18 +55,23 @@ function AuthPage() {
         toast.success("Selamat datang kembali!");
         navigate({ to: "/dashboard" });
       } else {
+        if (!values.name || values.name.trim().length === 0) {
+          throw new Error("Masukkan nama");
+        }
         const { data, error } = await supabase.auth.signUp({
           email: values.email,
           password: values.password,
-          options: { emailRedirectTo: window.location.origin },
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: { name: values.name },
+          },
         });
         if (error) throw error;
         // Jika verifikasi email aktif, session belum tersedia setelah daftar.
         if (!data.session) {
-          toast.success(
-            "Akun dibuat. Cek email Anda untuk verifikasi sebelum login.",
-            { duration: 6000 },
-          );
+          toast.success("Akun dibuat. Cek email Anda untuk verifikasi sebelum login.", {
+            duration: 6000,
+          });
           setMode("login");
           reset();
           return;
@@ -151,6 +157,23 @@ function AuthPage() {
           </Tabs>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {mode === "register" && (
+              <div className="space-y-1.5">
+                <Label htmlFor="name">Nama</Label>
+                <div className="relative">
+                  <Store className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Nama atau username"
+                    className="pl-9"
+                    {...register("name")}
+                  />
+                </div>
+                {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+              </div>
+            )}
+
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
