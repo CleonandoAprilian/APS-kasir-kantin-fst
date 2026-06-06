@@ -52,24 +52,37 @@ function AuthPage() {
         });
         if (error) throw error;
         toast.success("Selamat datang kembali!");
+        navigate({ to: "/dashboard" });
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: values.email,
           password: values.password,
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
+        // Jika verifikasi email aktif, session belum tersedia setelah daftar.
+        if (!data.session) {
+          toast.success(
+            "Akun dibuat. Cek email Anda untuk verifikasi sebelum login.",
+            { duration: 6000 },
+          );
+          setMode("login");
+          reset();
+          return;
+        }
         toast.success("Akun berhasil dibuat!");
+        navigate({ to: "/dashboard" });
       }
-      navigate({ to: "/dashboard" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       toast.error(
         msg.includes("Invalid login")
           ? "Email atau password salah"
-          : msg.includes("already registered")
-            ? "Email sudah terdaftar"
-            : msg,
+          : msg.toLowerCase().includes("email not confirmed")
+            ? "Email belum diverifikasi. Cek email Anda atau nonaktifkan 'Confirm email' di pengaturan database."
+            : msg.includes("already registered")
+              ? "Email sudah terdaftar"
+              : msg,
       );
     } finally {
       setLoading(false);
